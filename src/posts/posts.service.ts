@@ -17,6 +17,7 @@ export class PostsService {
 
   async findOne(id: number) {
     const post = await this.prismaService.post.findUnique({ where: { id } });
+    console.log(post)
 
     if (!post) {
       throw new NotFoundException('Post not found');
