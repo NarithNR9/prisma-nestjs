@@ -17,20 +17,20 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
-@Controller('posts')
+@Controller('items/posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+    return this.postsService.create(createPostDto); 
   }
 
-  @Post('upload')
+  @Post('file')
   @UseInterceptors(
-    FileInterceptor('file', {
+    FileInterceptor('thumbnail', {
       storage: diskStorage({
-        destination: './uploads',
+        destination: './uploads/assets',
         filename: (req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -58,11 +58,12 @@ export class PostsController {
   findAll() {
     return this.postsService.findAll();
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
   }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {

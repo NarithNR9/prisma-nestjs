@@ -11,25 +11,26 @@ export class PostsService {
     return this.prismaService.post.create({ data: createPostDto });
   }
 
-  findAll() {
-    return this.prismaService.post.findMany();
+  async findAll() {
+    const datas = await this.prismaService.post.findMany();
+    return { data: datas };
   }
 
   async findOne(id: number) {
     const post = await this.prismaService.post.findUnique({ where: { id } });
-    console.log(post)
 
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    return post;
+    return { data: post };
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return this.prismaService.post.update({
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    const data = await this.prismaService.post.update({
       where: { id },
       data: updatePostDto,
     });
+    return { data: data };
   }
 
   remove(id: number) {
